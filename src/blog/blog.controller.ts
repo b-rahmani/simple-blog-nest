@@ -6,10 +6,12 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog-dto';
+import { UpdateBlogDto } from './dto/update-blog-dto';
 
 @Controller('blog')
 export class BlogController {
@@ -47,5 +49,11 @@ export class BlogController {
   @Delete(':id')
   deletePost(@Param('id') id: number) {
     return this.blogService.deletePost(id);
+  }
+
+  @Patch(':id')
+  updatePost(@Param('id') id: number, @Body() updateBlogDto: UpdateBlogDto) {
+
+    return this.blogService.updatePost(id, updateBlogDto);
   }
 }

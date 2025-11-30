@@ -37,4 +37,16 @@ export class AuthorService {
       .where('author.id=:id', { id: authorId })
       .getOne();
   }
+
+  async findOrFail(authorId: number) {
+    const author = await this.authorRepository.findOne({
+      where: { id: authorId },
+    });
+
+    if (!author) {
+      throw new NotFoundException('نویسنده پیدا نشد');
+    }
+
+    return author;
+  }
 }

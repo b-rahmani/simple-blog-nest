@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBlogDto } from './dto/create-blog-dto';
 import { Author } from 'src/author/entities/author.entity';
 import { Tag } from 'src/tags/entities/tag.entity';
+import { UpdateBlogDto } from './dto/update-blog-dto';
 
 @Injectable()
 export class BlogService {
@@ -18,7 +19,7 @@ export class BlogService {
   ) {}
 
   async getPosts() {
-    const blog = this.blogRepository.find({ relations: ['author'] });
+    const blog = this.blogRepository.find({ relations: ['author', 'tags'] });
     return blog || [];
   }
   async getPost(id: number) {
@@ -57,5 +58,38 @@ export class BlogService {
     }
 
     return this.blogRepository.remove(post);
+  }
+
+  async updatePost(id: number, updateBlogDto: UpdateBlogDto) {
+    const post = await this.blogRepository.findOne({
+      where: { id },
+      relations: ['author', 'tags'],
+    });
+
+    if (!post) {
+      throw new NotFoundException('پست پیدا نشد');
+    }
+
+    Object.assign(post, updateBlogDto);
+
+    if (updateBlogDto.authorId) {
+      const newAuthor = await this.authorRepository.findOne({
+        where: { id: updateBlogDto.authorId },
+      });
+
+      if (!newAuthor) {
+        throw new NotFoundException('نویسنده پیدا نشد');
+      }
+      post.author = newAuthor;
+    }
+
+    if (updateBlogDto.tags) {
+      const tags = await this.tagRepository.find({
+        where: { id: In(updateBlogDto.tags) },
+      });
+      post.tags = tags;
+    }
+
+    return this.blogRepository.save(post);
   }
 }

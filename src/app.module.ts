@@ -7,6 +7,7 @@ import { BlogModule } from './blog/blog.module';
 import { AuthorModule } from './author/author.module';
 import { ProductsModule } from './products/products.module';
 import { ProductCategoriesModule } from './product-categories/product-categories.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ProductCategoriesModule } from './product-categories/product-categories
       autoLoadEntities: true,
       synchronize: true,
     }),
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

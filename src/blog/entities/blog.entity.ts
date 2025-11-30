@@ -1,8 +1,11 @@
 import { Author } from 'src/author/entities/author.entity';
+import { Tag } from 'src/tags/entities/tag.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   // JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -27,4 +30,8 @@ export class BlogPost {
 
   @ManyToOne(() => Author, (author) => author.posts)
   author: Author;
+
+  @ManyToMany(() => Tag, (tag) => tag.posts)
+  @JoinTable()
+  tags: Tag[];
 }

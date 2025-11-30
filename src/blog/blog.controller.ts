@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -41,5 +42,10 @@ export class BlogController {
     id: number,
   ) {
     return this.blogService.getPost(id);
+  }
+
+  @Delete(':id')
+  deletePost(@Param('id') id: number) {
+    return this.blogService.deletePost(id);
   }
 }

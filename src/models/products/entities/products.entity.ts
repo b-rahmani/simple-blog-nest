@@ -1,3 +1,4 @@
+import { UpdateBlogDto } from 'src/models/blog/dto/update-blog-dto';
 import { ProductCategory } from 'src/models/product-categories/entities/product-category.entity';
 import {
   Column,
@@ -5,6 +6,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('products')

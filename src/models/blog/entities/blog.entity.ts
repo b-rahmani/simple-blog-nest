@@ -23,8 +23,12 @@ export class BlogPost {
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ nullable: true })
-  image: string;
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  image: string | null;
 
   @CreateDateColumn()
   createdAt: Date;

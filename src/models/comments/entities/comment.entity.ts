@@ -24,9 +24,9 @@ export class Comment {
   refType: RefType;
 
   //user
-  @ManyToOne(() => User, (user) => user.comments, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
-  user: User;
+  // @ManyToOne(() => User, (user) => user.comments, { onDelete: 'CASCADE' })
+  // @JoinColumn({ name: 'userId' })
+  // user: User;
 
   @Column()
   userId: number;

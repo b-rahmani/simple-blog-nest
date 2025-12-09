@@ -43,14 +43,19 @@ export class BlogService {
     };
   }
 
-  async createPost(createBlogDto: CreateBlogDto) {
+  async createPost(createBlogDto: CreateBlogDto, file?: Express.Multer.File) {
+    console.log(' createBlogDto:', createBlogDto.tags);
+
+    const imageUrl = file ? `/uploads/articles/${file.filename}` : null;
+
     const author = await this.authorService.findOrFail(createBlogDto.authorId);
 
-    const tags = await this.tagsService.findTagsByListOfIds(createBlogDto.tags);
+    // const tags = await this.tagsService.findTagsByListOfIds(createBlogDto.tags);
 
     const postToSave = this.blogRepository.create({
       ...createBlogDto,
-      tags,
+      image: imageUrl,
+      tags: [],
       author,
     });
     return this.blogRepository.save(postToSave);
@@ -71,11 +76,11 @@ export class BlogService {
       post.author = await this.authorService.findOrFail(updateBlogDto.authorId);
     }
 
-    if (updateBlogDto.tags) {
-      post.tags = await this.tagsService.findTagsByListOfIds(
-        updateBlogDto.tags,
-      );
-    }
+    // if (updateBlogDto.tags) {
+    //   post.tags = await this.tagsService.findTagsByListOfIds(
+    //     updateBlogDto.tags,
+    //   );
+    // }
 
     return this.blogRepository.save(post);
   }

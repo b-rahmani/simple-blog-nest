@@ -24,8 +24,8 @@ export class User {
   @Column({ nullable: true })
   avatarUrl: string;
 
-  @OneToMany(() => Comment, (comment) => comment.user)
-  comments: Comment[];
+  // @OneToMany(() => Comment, (comment) => comment.user)
+  // comments: Comment[];
 
   @CreateDateColumn()
   createdAt: Date;

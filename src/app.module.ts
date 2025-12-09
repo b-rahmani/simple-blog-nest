@@ -10,9 +10,16 @@ import { ProductCategoriesModule } from './models/product-categories/product-cat
 import { TagsModule } from './models/tags/tags.module';
 import { SeoModule } from './models/seo/seo.module';
 import { typeOrmConfig } from './database/typeorm.config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads',
+    }),
+
     TypeOrmModule.forRoot(typeOrmConfig),
     CatsModule,
     BlogModule,

@@ -8,6 +8,7 @@ import { AuthorService } from 'src/models/author/author.service';
 import { TagsService } from 'src/models/tags/tags.service';
 import { SeoService } from 'src/models/seo/seo.service';
 import { RefType } from 'src/enums/ref-type.enum';
+// import { ParsedBlogData } from 'src/types/ParsedBlogData';
 
 @Injectable()
 export class BlogService {
@@ -44,18 +45,16 @@ export class BlogService {
   }
 
   async createPost(createBlogDto: CreateBlogDto, file?: Express.Multer.File) {
-    console.log(' createBlogDto:', createBlogDto.tags);
-
     const imageUrl = file ? `/uploads/articles/${file.filename}` : null;
 
     const author = await this.authorService.findOrFail(createBlogDto.authorId);
 
-    // const tags = await this.tagsService.findTagsByListOfIds(createBlogDto.tags);
+    const tags = await this.tagsService.findTagsByListOfIds(createBlogDto.tags);
 
     const postToSave = this.blogRepository.create({
       ...createBlogDto,
       image: imageUrl,
-      tags: [],
+      tags: tags,
       author,
     });
     return this.blogRepository.save(postToSave);

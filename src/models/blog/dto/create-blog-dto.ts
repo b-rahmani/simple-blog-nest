@@ -6,6 +6,7 @@ import {
   ArrayMinSize,
   ArrayUnique,
   IsInt,
+  IsArray,
 } from 'class-validator';
 
 export class CreateBlogDto {
@@ -32,8 +33,15 @@ export class CreateBlogDto {
   @IsNotEmpty({ message: 'نویسنده مقاله الزامی است' })
   authorId: number;
 
-  // @IsInt({ each: true, message: 'تگ‌ها باید به صورت id باشند' })
-  // @ArrayUnique({ message: 'تگ‌ها نباید تکراری باشند' })
-  // @ArrayMinSize(1, { message: 'حداقل یک تگ باید انتخاب شود' })
-  tags: number[] | string;
+  @ApiProperty({
+    required: false,
+    oneOf: [
+      { type: 'string', example: '1,2,3' },
+      { type: 'string', example: '[1,2,3]' },
+    ],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  tags?: number[];
 }

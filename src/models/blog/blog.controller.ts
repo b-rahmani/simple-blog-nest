@@ -21,6 +21,8 @@ import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { MulterExceptionFilter } from 'src/filters/multer-exception.filter';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+// import { ParsedBlogData } from 'src/types/ParsedBlogData';
+import { ParseTagsPipe } from 'src/constants/parse-tags.pipe';
 
 @Controller('blog')
 @UseFilters(MulterExceptionFilter)
@@ -83,22 +85,16 @@ export class BlogController {
   )
   async createPost(
     @Body() createBlogDto: CreateBlogDto,
+    @Body('tags', ParseTagsPipe) tags: number[],
     @UploadedFile() file: Express.Multer.File,
   ) {
     console.log('🔥 RAW BODY:', createBlogDto);
     console.log('🔥 FILE:', file);
 
-    // if (typeof createBlogDto.tags === 'string') {
-    //   createBlogDto.tags = [Number(createBlogDto.tags)];
-    // }
-
-    // if (Array.isArray(createBlogDto.tags)) {
-    //   createBlogDto.tags = createBlogDto.tags.map((tag) => Number(tag));
-    // }
-
     createBlogDto.authorId = Number(createBlogDto.authorId);
+    const payload = { ...createBlogDto, tags };
 
-    return this.blogService.createPost(createBlogDto, file);
+    return this.blogService.createPost(payload, file);
   }
 
   @Get(':id')

@@ -12,6 +12,7 @@ import { SeoModule } from './models/seo/seo.module';
 import { typeOrmConfig } from './database/typeorm.config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { CommentModule } from './models/comments/comment.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { join } from 'path';
     ProductCategoriesModule,
     TagsModule,
     SeoModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

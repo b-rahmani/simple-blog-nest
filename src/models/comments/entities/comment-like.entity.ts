@@ -7,6 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Comment } from './comment.entity';
 
 @Entity('comments_likes')
 export class CommentLike {
@@ -16,21 +17,25 @@ export class CommentLike {
   @Column()
   commentId: number;
 
-  // @ManyToOne(() => Comment, (comment) => comment.likes, {
-  //   onDelete: 'CASCADE',
-  // })
+  @ManyToOne(() => Comment, (comment) => comment.likes, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'commentId' })
   comment: Comment;
 
   @Column()
   userId: number;
 
-  // @ManyToOne(() => User, (user) => user.comments, { onDelete: 'CASCADE' })
+  // @ManyToOne(
+  //   () => User,
+  //   //  (user) => user.comments,
+  //   { onDelete: 'CASCADE' },
+  // )
   // @JoinColumn({ name: 'userId' })
   // user: User;
 
   // -1 = dislike, 1 = like
-  @Column()
+  @Column({ type: 'int' })
   value: number;
 
   @CreateDateColumn()

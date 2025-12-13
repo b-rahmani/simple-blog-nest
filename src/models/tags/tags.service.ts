@@ -67,7 +67,8 @@ export class TagsService {
 
   // queries
 
-  async findTagsByListOfIds(ids: number[]) {
+  async findTagsByListOfIds(ids?: number[]) {
+    if (!ids || ids?.length === 0) return [];
     const tags = await this.tagsRepository.find({
       where: { id: In(ids) },
     });

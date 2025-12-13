@@ -85,16 +85,16 @@ export class BlogController {
   )
   async createPost(
     @Body() createBlogDto: CreateBlogDto,
-    @Body('tags', ParseTagsPipe) tags: number[],
+    // @Body('tags', ParseTagsPipe) tags: number[],
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log('🔥 RAW BODY:', createBlogDto);
+    console.log('🔥 body:', createBlogDto);
     console.log('🔥 FILE:', file);
 
     createBlogDto.authorId = Number(createBlogDto.authorId);
-    const payload = { ...createBlogDto, tags };
+    // const payload = { ...createBlogDto, tags };
 
-    return this.blogService.createPost(payload, file);
+    return this.blogService.createPost(createBlogDto, file);
   }
 
   @Get(':id')

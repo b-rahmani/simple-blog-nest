@@ -14,11 +14,13 @@ async function bootstrap() {
       // forbidNonWhitelisted: true,
       stopAtFirstError: true,
       transform: true,
+      transformOptions: {
+        enableImplicitConversion: false,
+      },
     }),
   );
 
-
-    // -----------------------
+  // -----------------------
   // Swagger Config
   // -----------------------
   const config = new DocumentBuilder()

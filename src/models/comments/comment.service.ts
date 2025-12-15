@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/createCommentDto';
 import { CreateCommentLikeDto } from './dto/createCommentLikeDto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { CommentLike } from './entities/comment-like.entity';
 import { Comment } from './entities/comment.entity';
 import { RefType } from 'src/enums/ref-type.enum';
@@ -49,6 +49,55 @@ export class CommentService {
       where: { refType, refId },
       order: { createdAt: 'DESC' },
     });
+  }
+
+  async findNestedByRef(refType: RefType, refId: number) {
+    return this.commentRepo.find({
+      where: { refType, refId, parentId: IsNull() },
+      relations: [
+        'children',
+        'children.children',
+        'children.children.children',
+      ],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async findNestedByRefUnlimited(refType: RefType, refId: number) {
+    // همه کامنت‌ها رو بگیر
+    const allComments = await this.commentRepo.find({
+      where: { refType, refId },
+      order: { createdAt: 'ASC' },
+    });
+
+    // تبدیل به درخت
+    return this.buildTree(allComments);
+  }
+
+  private buildTree(comments: Comment[]): Comment[] {
+    const map = new Map<number, Comment & { children: Comment[] }>();
+    const roots: Comment[] = [];
+
+    // اول همه رو با children خالی بساز
+    comments.forEach((comment) => {
+      map.set(comment.id, { ...comment, children: [] });
+    });
+
+    // بعد هر کدوم رو به والدش وصل کن
+    comments.forEach((comment) => {
+      const node = map.get(comment.id)!;
+
+      if (!comment.parentId) {
+        roots.push(node);
+      } else {
+        const parent = map.get(comment.parentId);
+        if (parent) {
+          parent.children.push(node);
+        }
+      }
+    });
+
+    return roots;
   }
 
   async getAllComments() {

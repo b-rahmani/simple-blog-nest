@@ -25,7 +25,7 @@ export class CreateCommentDto {
 
   @ApiPropertyOptional({ example: null })
   @IsOptional()
-  @IsInt()
+  @IsInt({ message: 'شناسه والد باید عدد باشد' })
   parentId?: number;
 
   @ApiProperty({

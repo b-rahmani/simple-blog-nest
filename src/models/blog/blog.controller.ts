@@ -18,7 +18,7 @@ import { CreateBlogDto } from './dto/create-blog-dto';
 import { UpdateBlogDto } from './dto/update-blog-dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { MulterExceptionFilter } from 'src/filters/multer-exception.filter';
+import { MulterExceptionFilter } from 'src/common/filters/multer-exception.filter';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 // import { ParsedBlogData } from 'src/types/ParsedBlogData';

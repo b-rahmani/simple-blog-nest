@@ -8,6 +8,9 @@ import { AuthorService } from 'src/models/author/author.service';
 import { TagsService } from 'src/models/tags/tags.service';
 import { SeoService } from 'src/models/seo/seo.service';
 import { RefType } from 'src/enums/ref-type.enum';
+import { QueryPostsDto } from './dto/query-posts.dto';
+import { PostSortBy } from 'src/enums/post-sort-by.enum';
+import { SortOrder } from 'src/enums/sort-order.enum';
 // import { ParsedBlogData } from 'src/types/ParsedBlogData';
 
 @Injectable()
@@ -29,6 +32,41 @@ export class BlogService {
     });
     return blog || [];
   }
+  async findAllPaginated(query: QueryPostsDto) {
+    const {
+      limit = 12,
+      order = SortOrder.DESC,
+      page = 1,
+      search,
+      sortBy = PostSortBy.CREATED_AT,
+    } = query;
+
+    const qb = this.blogRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.author', 'author');
+
+    if (search) {
+      qb.where('post.title LIKE :search OR post.content LIKE :search', {
+        search: `%${search}%`,
+      });
+    }
+
+    qb.orderBy(`post.${sortBy}`, order);
+    qb.skip((page - 1) * limit).take(limit);
+
+    const [items, total] = await qb.getManyAndCount();
+
+    return {
+      data: items,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
   async getPost(id: number) {
     const post = await this.findPostOrFail(id, ['author', 'tags']);
     return post;

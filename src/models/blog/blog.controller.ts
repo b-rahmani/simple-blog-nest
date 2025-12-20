@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseFilters,
   UseInterceptors,
@@ -23,6 +24,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 // import { ParsedBlogData } from 'src/types/ParsedBlogData';
 import { ParseTagsPipe } from 'src/constants/parse-tags.pipe';
+import { QueryPostsDto } from './dto/query-posts.dto';
 
 @Controller('blog')
 @UseFilters(MulterExceptionFilter)
@@ -37,6 +39,11 @@ export class BlogController {
   @Get('')
   getPosts() {
     return this.blogService.getPosts();
+  }
+
+  @Get('/paginated')
+  findAll(@Query() query:QueryPostsDto) {
+    return this.blogService.findAllPaginated(query);
   }
 
   @Post()
